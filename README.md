@@ -29,8 +29,6 @@ A custom `JwtAuthenticationFilter` is used to:
 2. Validate and parse the JWT  
 3. Set authentication in the SecurityContext  
 
-### 🔒 **Role-based Authorization**
-- Secures endpoints based on roles (ex: `ROLE_USER`, `ROLE_ADMIN`).
 
 ### 📡 **Protected API Endpoints**
 - Example: `/api/user/**` requires a valid token.
@@ -89,7 +87,7 @@ Copy code
 ## 🧪 API Endpoints
 
 ### **Register**
-POST /auth/register
+POST /auth/signup
 
 markdown
 Copy code
@@ -97,15 +95,10 @@ Copy code
 ### **Login (Generates JWT)**
 POST /auth/login
 
-markdown
-Copy code
 
 ### **Access Protected Resource**
 GET /api/user/profile
 Authorization: Bearer <token>
-
-yaml
-Copy code
 
 ---
 
