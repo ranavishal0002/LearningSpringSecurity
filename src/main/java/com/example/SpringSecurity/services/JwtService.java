@@ -1,9 +1,12 @@
-package com.example.SpringSecurity.service;
+package com.example.SpringSecurity.services;
 
 import com.example.SpringSecurity.entity.User;
+import com.example.SpringSecurity.entity.enums.Role;
 import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.ClaimsMutator;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -12,7 +15,10 @@ import java.nio.charset.StandardCharsets;
 import java.util.Date;
 
 @Service
+@RequiredArgsConstructor
 public class JwtService {
+
+//    private final Role roles;
 
     @Value("${jwt.secretKey}")
     private String jwtSecretKey;
@@ -26,8 +32,19 @@ public class JwtService {
         return Jwts.builder()
                 .subject(user.getId().toString())
                 .claim("email", user.getEmail())
+                .claim("roles", user.getRoles().toString())
                 .issuedAt(new Date())
-                .expiration(new Date(System.currentTimeMillis() + 1000*60*10))
+                .expiration(new Date(System.currentTimeMillis() + 1000*10))
+                .signWith(getSecretKey())
+                .compact();
+    }
+
+
+    public String generateRefreshToken(User user) {
+        return Jwts.builder()
+                .subject(user.getId().toString())
+                .issuedAt(new Date())
+                .expiration(new Date(System.currentTimeMillis() + 1000L *20))
                 .signWith(getSecretKey())
                 .compact();
     }
