@@ -1,6 +1,7 @@
 package com.example.SpringSecurity;
 
-import com.example.SpringSecurity.service.JwtService;
+import com.example.SpringSecurity.entity.User;
+import com.example.SpringSecurity.services.JwtService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -13,15 +14,14 @@ class SpringSecurityApplicationTests {
 
 	@Test
 	void contextLoads() {
-		EmployeeEntity employeeEntity = new EmployeeEntity(
-				4L,
-				"Vishal",
-				"Rana",
-				"vishal@example.com",
-				"Engineering",
-				"password123"
-		);
-String token = jwtService.generateToken(employeeEntity);
+		User user = User.builder()
+				.id(4L)
+				.name("Vishal Rana")
+				.email("vishal@example.com")
+				.password("password123")
+				.build();
+		
+		String token = jwtService.generateAccessToken(user);
 		System.out.println(token);
 
 		Long id = jwtService.getUserIdFromToken(token);
