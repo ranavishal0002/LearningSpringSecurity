@@ -1,4 +1,4 @@
-package com.example.SpringSecurity.service;
+package com.example.SpringSecurity.services;
 
 
 import com.example.SpringSecurity.dto.PostDTO;

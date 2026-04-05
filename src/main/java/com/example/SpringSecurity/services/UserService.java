@@ -1,19 +1,12 @@
-package com.example.SpringSecurity.service;
+package com.example.SpringSecurity.services;
 
-
-
-import com.example.SpringSecurity.dto.LoginDto;
 import com.example.SpringSecurity.dto.SignUpDto;
 import com.example.SpringSecurity.dto.UserDto;
 import com.example.SpringSecurity.entity.User;
 import com.example.SpringSecurity.repository.UserRepository;
-import io.jsonwebtoken.Jwt;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
-import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -41,7 +34,7 @@ public class UserService implements UserDetailsService {
                 " not found"));
     }
 
-    public User getUsrByEmail(String email) {
+    public  User getUserByEmail(String email){
         return userRepository.findByEmail(email).orElse(null);
     }
 

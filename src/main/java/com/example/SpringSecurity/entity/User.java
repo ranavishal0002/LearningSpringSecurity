@@ -1,6 +1,8 @@
 package com.example.SpringSecurity.entity;
 
 //import com.example.demo4.SecurityApp.entities.enums.Role;
+import com.example.SpringSecurity.entity.enums.Permission;
+import com.example.SpringSecurity.entity.enums.Role;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
@@ -9,14 +11,16 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
-@Getter
-@Setter
+
 @Entity
 @Table(name = "users")
 @NoArgsConstructor
 @AllArgsConstructor
-@ToString
+@Getter
+@Setter
 @Builder
 public class User implements UserDetails {
 
@@ -27,33 +31,40 @@ public class User implements UserDetails {
     private String password;
     private String name;
 
+//    private Role role;                               // this is when we want one role per user
+
+    @ElementCollection(fetch = FetchType.EAGER)
+    @Enumerated(EnumType.STRING)                      // otherwise role will be stored in numbers like 0,1,2 in the DB
+    private Set<Role> roles;                            // Now one user can have more than one role
+
+
+    @ElementCollection(fetch = FetchType.EAGER)
+    @Enumerated(EnumType.STRING)
+    private Set<Permission>permissions;
+
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of(new SimpleGrantedAuthority("ROLE_USER"));
+        Set<SimpleGrantedAuthority>authorities= roles.stream()
+                .map(roles -> new SimpleGrantedAuthority(roles.name()))
+                .collect(Collectors.toSet());
+        permissions.forEach(
+                permission -> authorities.add(new SimpleGrantedAuthority(permission.name()))
+        );
+        return authorities;
     }
 
     @Override
     public String getUsername() {
-        return email;
+        return this.email;
     }
 
     @Override
-    public boolean isAccountNonExpired() {
-        return true;
-    }
-
-    @Override
-    public boolean isAccountNonLocked() {
-        return true;
-    }
-
-    @Override
-    public boolean isCredentialsNonExpired() {
-        return true;
-    }
-
-    @Override
-    public boolean isEnabled() {
-        return true;
+    public String getPassword() {
+        return this.password;
     }
 }
+
+
+
+
